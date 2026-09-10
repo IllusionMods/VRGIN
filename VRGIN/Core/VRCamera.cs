@@ -363,7 +363,7 @@ namespace VRGIN.Core
         public void CopyFX(Camera blueprint)
         {
 
-            CopyFX(blueprint.gameObject, gameObject, true);
+            CopyFX(blueprint.gameObject, gameObject, false);
             FixEffectOrder();  
         }
 
@@ -386,7 +386,7 @@ namespace VRGIN.Core
             }
             int comps = target.GetComponents<Component>().Length;
 
-            VRLog.Info("Copying FX to {0}...", target.name);
+            VRLog.Info("Copying FX from {1} to {0}...", target.name, source.name);
             // Rebuild
             foreach (var fx in source.GetCameraEffects())
             {
@@ -445,16 +445,21 @@ namespace VRGIN.Core
 
         internal void RegisterSlave(CameraSlave slave)
         {
-            VRLog.Info("Camera went online: {0}", slave.name);
-            Slaves.Add(slave);
+            //VRLog.Info("Camera went online: {0}", slave.name);
+            if (!Slaves.Contains(slave))
+            {
+                Slaves.Add(slave);
+            }
             UpdateCameraConfig();
         }
 
         internal void UnregisterSlave(CameraSlave slave)
         {
-            VRLog.Info("Camera went offline: {0}", slave.name);
-            Slaves.Remove(slave);
-            UpdateCameraConfig();
+            //VRLog.Info("Camera went offline: {0}", slave.name);
+            if (Slaves.Remove(slave))
+            {
+                UpdateCameraConfig();
+            }
         }
     }
 }
